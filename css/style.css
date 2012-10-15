@@ -1,0 +1,9 @@
+/*
+Author: James Shakespeare
+URL: http://jshakespeare.com
+Description: CSS for the Flickr Wall
+
+*/
+ul.flickrwall{  list-style: none; margin: 0; padding: 0;   }
+ul.flickrwall li{   float: left; width: 47px; height: 47px; overflow: hidden; position: relative;  }
+ul.flickrwall li img{   position: absolute; top: 0; left: 0;   }
