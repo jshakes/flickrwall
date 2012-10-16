@@ -12,12 +12,12 @@ $i = 0;//the counter for the loop
 $x = 0;
 $y = 0;
 
-if ($handle = opendir('cache/')) {
+if ($handle = opendir('imgcache/')) {
 
     while (false !== ($imgurl = readdir($handle))) {	
-        if ($imgurl != "." && $imgurl != "..") {
+        if (substr($imgurl, 0, 1) != ".") {
     	
-			$thumb = imagecreatefromjpeg("cache/$imgurl");
+			$thumb = imagecreatefromjpeg("imgcache/$imgurl");
 		
 			imagecopy($palette, $thumb, $x, $y, 0, 0, 47, 47);
 		
