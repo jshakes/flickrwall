@@ -25,8 +25,7 @@ function changePhoto(numitems){
     //choose a random item to change
     var _randnum = Math.floor(Math.random() * numitems);
     var _imgdiv = $(".flickrwall li#photo_" + _randnum);
-    console.log(_randnum);
-    
+        
     //add the new image to the photo div. It will remain behind the existing image for now
     if(typeof images[pointer] != "undefined"){
         _imgdiv.addClass("transition").prepend("<img src="+ images[pointer] +" />");

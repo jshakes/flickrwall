@@ -25,7 +25,6 @@ if ($handle = opendir($dir)) {
 	} 
 	//shuffle the image array
 	if(!empty($images) && $shuffle)    shuffle($images);
-	print_r($images);
 }
 ?>
 <html>
