@@ -1,5 +1,7 @@
 
-var fadetime = 1500;
+var pausetime = 500,
+    fadetime = 1500;
+
 
 $(function(){
     
@@ -14,9 +16,8 @@ $(function(){
     $("ul.flickrwall li img").load(function(){
     	$(this).parent().fadeIn(1000).show();	
     });
-	//set this function to run again at a randomly set interval between .5 and 2.5 seconds
-	//randtime = 1500*Math.random() + 150;
-	setInterval("changePhoto(" + numitems + ")", 500);
+	//set this function to run ever x milliseconds
+	setInterval("changePhoto(" + numitems + ")", pausetime);
     	
     /* - Home Page Flickr Banner End - */
     
@@ -29,7 +30,8 @@ function changePhoto(numitems){
     var _imgdiv = $(".flickrwall li#photo_" + _randnum);
     
     //add the new image to the photo div. It will remain behind the existing image for now
-    _imgdiv.prepend("<img src="+ images[pointer] +" />");
+    if(typeof images[pointer] != "undefined") _imgdiv.prepend("<img src="+ images[pointer] +" />");
+    else console.log("Couldn't find the image at " + pointer);
     
     //when the image is loaded in
     _imgdiv.children("img:first-child").load(function(){
