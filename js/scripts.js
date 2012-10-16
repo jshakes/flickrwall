@@ -1,4 +1,6 @@
 
+var fadetime = 1500;
+
 $(function(){
     
     /* - Home Page Flickr Banner Start - */
@@ -22,30 +24,24 @@ $(function(){
 
 function changePhoto(numitems){
 		
-	//choose a random item to change
-	var randitem = Math.floor(Math.random()*numitems);
-	
-	//add the new image to the photo div. It will remain behind the existing image for now
-		$(".flickrwall #photo_" + randitem).prepend("<img src="+ images[pointer] +" />");
-		
-		$(".flickrwall #photo_" + randitem + " img:first-child").load(function(){
-		
-		//fade the new image in (sloooowly)
-		$(".flickrwall #photo_" + randitem + " img:first-child").hide().fadeIn(1500);
-		
-			//fade out the old image (last-child). This will reveal the new image behind it
-			$(".flickrwall #photo_" + randitem + " img:last-child").fadeOut(1000, function(){
-			
-				//once done, remove the old image...
-				$(this).remove();
-			
-			});
-		
-		});
-		
-		//increment the pointer by 1, or reset it if we've reached the end of the array
-		if(pointer < images.length)		pointer++;
-		else	pointer = 0;
-		
-	
+    //choose a random item to change
+    var _randnum = Math.floor(Math.random() * numitems);
+    var _imgdiv = $(".flickrwall li#photo_" + _randnum);
+    
+    //add the new image to the photo div. It will remain behind the existing image for now
+    _imgdiv.prepend("<img src="+ images[pointer] +" />");
+    
+    //when the image is loaded in
+    _imgdiv.children("img:first-child").load(function(){
+    
+        //fade out the old image (last-child). This will reveal the new image behind it
+        $(this).siblings("img:last-child").fadeOut(fadetime, function(){
+        
+            //once done, remove the old image...
+            $(this).remove();
+        
+        });
+    });
+    if(pointer < images.length)		pointer++;
+    else	pointer = 0;
 }
