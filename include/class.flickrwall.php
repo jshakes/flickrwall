@@ -10,10 +10,15 @@
 class Flickrwall{
     
     /**
-    * The name of the directory to store and pull images from
+    * The name of the directory to store and pull images from (relative to the root)
     * @var string
     */
     public $img_dir = "imgcache";
+    /**
+    * A string to store the full path to the image directory
+    * @var string
+    */
+    public $img_dir_path = "";
     /**
     * An array to store all the images we'll be using
     * @var array
@@ -57,6 +62,11 @@ class Flickrwall{
     
     /* --------------- METHODS --------------- */
     
+    function __construct(){
+        
+        $this->img_dir_path = dirname(dirname(__FILE__))."/".$this->img_dir;
+    }
+    
     /**
     * Pull down the latest images from the Flickr Pool
     * @access public
@@ -69,28 +79,26 @@ class Flickrwall{
         
         $f = new phpFlickr($this->api_key);
 
-        if(@$photos = $f->groups_pools_getPhotos($this->$pool_id)){
-        
+        if($photos = $f->groups_pools_getPhotos($this->pool_id)){
+            
             // Loop through the photos
             foreach ((array)$photos['photos']['photo'] as $i => $photo) {
-                
-                if($i == $limit) break;
-                
+                                
                 $imgid = $photo['id'];
                 
                 //Continue to next iteration if the file already exists and we aren't overwriting files
-                if(file_exists("{$this->imgdir}/$imgid.jpg") && !$this->delete_existing) continue;
+                if(file_exists("{$this->img_dir_path}/$imgid.jpg") && !$this->delete_existing) continue;
                 
-                //Create the GD image we will load the thumb into 
+                //Create the GD palette we will load the thumb into 
                 $palette = imagecreatetruecolor($this->thumb_size, $this->thumb_size);
                 
                 $imgurl = $f->buildPhotoURL($photo, "square");
                 
                 $thumb = imagecreatefromjpeg($imgurl);
                 
-                imagecopyresampled($palette, $thumb, 0, 0, 0, 0, $thumb_size, $thumb_size, 75, 75);
+                imagecopyresampled($palette, $thumb, 0, 0, 0, 0, $this->thumb_size, $this->thumb_size, 75, 75);
                 
-                if(@imagejpeg($palette, "{$this->imgdir}/$imgid.jpg"))
+                if(imagejpeg($palette, "{$this->img_dir_path}/$imgid.jpg"))
                     echo "$imgid.jpg written to cache\n";
                 else
                     echo "file write error\n";	
@@ -107,7 +115,7 @@ class Flickrwall{
     */
     public function make_image_arr(){
         
-        if ($handle = opendir($this->img_dir)) {
+        if ($handle = opendir($this->img_dir_path)) {
                         		
         	//load all images in cache into the images array
             while (false !== ($imgurl = readdir($handle))) {	
