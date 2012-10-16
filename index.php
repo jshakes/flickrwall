@@ -8,6 +8,7 @@ This page picks up images that have been saved to the 'cache' folder and saves t
 
 //maximum number of images to display
 $max = 30;
+$shuffle = true;
 
 //the location of the images
 $dir = "imgcache";
@@ -23,7 +24,7 @@ if ($handle = opendir($dir)) {
 		}
 	} 
 	//shuffle the image array
-	if(!empty($images))    shuffle($images);
+	if(!empty($images) && $shuffle)    shuffle($images);
 	print_r($images);
 }
 ?>
@@ -31,55 +32,35 @@ if ($handle = opendir($dir)) {
 <head>
 <title>Flickr Wall Demo</title>
 <link rel="stylesheet" href="css/style.css" />
-<script>
-
-var images = new Array();
-var pointer = <?php echo count($images); ?>;
-<?php
-//Our Javascript array goes here
-foreach($images as $pointer => $image){ 
-    ?>images[<?php echo $pointer; ?>] = '<?php echo $image; ?>';<?php
-} ?>
-
-</script>
 </head>
 
 <body>
 <ul class="flickrwall">
 <?php
-
-/* Images are printed out here */
-		
-//starting x and y co-ordinates so we can keep track of where images are going on the grid
-$x = 0;
-$y = 1;
-		
+//Images are printed out here
 foreach($images as $pointer => $image){
 	?>
 	<li class="image" id="photo_<?php echo $pointer; ?>">
 		<img src="<?php echo $image; ?>" />
 	</li>
 	<?php
-	//update x and y co-ordinates
-	$x++;
-	
-	if($x == 20){
-		$x = 0;
-		$y++;
-	}
-	
-	//a very hacky way of only writing 3 and 2 images to the 5th and 6th rows respectively 
-	if(($y == 5 || $y == 6) && $x == 3){
-		echo "<div class=\"clear\"></div>";
-		$y++;
-		$x = 0;
-	}
-	
-	if($pointer == $max -1) break;
+	if($pointer + 1 == $max) break;
 }
 ?>
 </ul>
+<script>
 
+var images = new Array();
+//this variable will ensure we start pulling in whichever images aren't already being displayed
+var pointer = <?php echo $max; ?>;
+<?php
+//Our Javascript array goes here
+foreach($images as $pointer => $image){ 
+    ?>
+    images[<?php echo $pointer; ?>] = '<?php echo $image; ?>';
+    <?php
+} ?>
+</script>
 <script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
 <script type="text/javascript" src="js/scripts.js"></script>
 
